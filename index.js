@@ -1,7 +1,11 @@
-console.clear();
-
+/**
+ * Carousel class
+ * @author Tyler Van Schaick
+ * @file Carousel class
+ */
 class Carousel {
   constructor(selector) {
+
     // @TODO Feature detection
 
     // Get DOM elements
@@ -15,9 +19,7 @@ class Carousel {
     this.prevButton = this.carousel.querySelector(".button--prev");
     this.pauseButton = this.carousel.querySelector(".button--pause");
 
-    // Set up variables
-    // this.settings;
-    // @TODO pass in config
+    // Set variables
     this.slideIndex = null;
     this.sliderInterval = null;
 
@@ -32,39 +34,22 @@ class Carousel {
       : defaults.interval;
     this.slideIndex = 1;
 
-    console.log("this.wrap", this.wrap);
-    console.log("this.interval", this.interval);
-
-    // this.addEventListeners();
-    //
-    // V2
-    //
-    // How supercharged side nav works
-    // bind all the methods in the constructor
-    // Methods for event listeners
+    // Bind functions
     this.play = this.play.bind(this);
     this.nextSlide = this.nextSlide.bind(this);
     this.prevSlide = this.prevSlide.bind(this);
     this.pause = this.pause.bind(this);
-    // Even private methods
     this.showDivs = this.showDivs.bind(this);
-    // Add event listeners without bind() in the call.
+
     this.addEventListenersV2();
 
     // Init
     this.showDivs(this.slideIndex);
   } // end constructor
 
-  // Original working way
-  // addEventListeners() {
-  //   // Add event listeners
-  //   this.playButton.addEventListener("click", this.play.bind(this));
-  //   this.nextButton.addEventListener("click", this.nextSlide.bind(this));
-  //   this.prevButton.addEventListener("click", this.prevSlide.bind(this));
-  //   this.pauseButton.addEventListener("click", this.pause.bind(this));
-  // }
-
-  // Binding in the constructor instead of here.
+  /**
+   * Add carousel related event listeners.
+   */
   addEventListenersV2() {
     // Add event listeners
     this.playButton.addEventListener("click", this.play);
@@ -73,6 +58,11 @@ class Carousel {
     this.pauseButton.addEventListener("click", this.pause);
   }
 
+  /**
+   * Show a specified div element/carousel slide
+   * @param  {number} n carousel slide index number
+   * @return {[type]}   [description]
+   */
   showDivs(n) {
     var i;
     var x = this.carousel.querySelectorAll(".carousel-item");
@@ -99,22 +89,42 @@ class Carousel {
       x[i].style.display = "none";
     }
     x[this.slideIndex - 1].style.display = "block";
-  }
+  };
+
+  /**
+   * Pause the carousel
+   * @return {[type]} [description]
+   */
   pause() {
     clearInterval(this.sliderInterval);
-  }
+  };
+
+  /**
+   * Go to previous carousel slide
+   * @return {[type]} [description]
+   */
   prevSlide() {
     this.showDivs((this.slideIndex += -1));
-  }
+  };
+
+  /**
+   * Go to next carousel slide
+   * @return {[type]} [description]
+   */
   nextSlide() {
     this.showDivs((this.slideIndex += 1));
-  }
+  };
+
+  /**
+   * Play the carousel slides
+   * @return {[type]} [description]
+   */
   play() {
     this.sliderInterval = setInterval(() => {
       this.nextSlide();
     }, this.interval);
-  }
-}
+  };
+};
 
 // Initiate
 const carousel1 = new Carousel("#carousel--1");
@@ -125,7 +135,7 @@ class SuperCarousel extends Carousel {
     super(selector);
     this.slideToButtons = this.carousel.querySelectorAll("[data-slide-to]");
     if (!this.slideToButtons.length > 0) {
-      console.log('Error, no "slide-to" buttons found.');
+      console.error('Error, no "slide-to" buttons found.');
       return false;
     }
     this.slideToButtons.forEach((button) => {
@@ -133,11 +143,16 @@ class SuperCarousel extends Carousel {
         this.selectSlide(Number(event.target.dataset.slideTo));
       });
     });
-  } // end constructor
+  }; // end constructor
 
+  /**
+   * Select a certain carousel slide
+   * @param  {[type]} n [description]
+   * @return {[type]}   [description]
+   */
   selectSlide(n) {
     this.showDivs((this.slideIndex = n));
-  }
-}
+  };
+};
 
 const carousel2 = new SuperCarousel("#carousel--2");
