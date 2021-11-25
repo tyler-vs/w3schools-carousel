@@ -1,2 +1,2 @@
-# w3c-carousel
+# w3schools-carousel
 w3school carousel
