@@ -138,15 +138,23 @@ class SuperJSONCarousel extends Carousel {
   //
   // We need to render those script created elements before
   // running the parent init() method.
+  /**
+   * Init to override the original classe's init method
+   * @return {[type]} [description]
+   */
   init() {
     console.count("SuperJSONCarousel init");
   }
 
-  // Returns an UL with rendered headings
-  renderApp(headings) {
+  /**
+   * Returns an UL with rendered slides
+   * @param  {Array} slides Array of slide data.
+   * @return {[type]}          [description]
+   */
+  renderApp(slides) {
     return [
       "<div class='carousel-items'>",
-      headings
+      slides
         .map((heading, i) => {
           return this.renderSlide(heading, i);
         })
@@ -157,7 +165,12 @@ class SuperJSONCarousel extends Carousel {
     ].join("");
   }
 
-  // Render a slide's HTML
+  /**
+   * Render a slide's HTML
+   * @param  {Object} slide Slide object
+   * @param  {Number} index Index number
+   * @return {[type]}       [description]
+   */
   renderSlide(slide, index) {
     if (!slide) {
       console.log("Error. Must provide slide parameter");
