@@ -255,6 +255,7 @@ class SuperJSONCarousel extends Carousel {
       console.log(
         "Error. Value must be provided for the renderDataAttribute function."
       );
+      return;
     }
     return `data-${name}="${value}"`;
   }
