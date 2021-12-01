@@ -108,9 +108,6 @@ class Carousel {
   }
 }
 
-// Initiate fist carousel
-const carousel1 = new Carousel("#carousel--1");
-
 // Sub classing with "extends" on the Carousel class.
 // This Super JSON Carousel will use JSON to generate a similar
 // carousel slider like the Carousel class does.
@@ -266,28 +263,5 @@ class SuperJSONCarousel extends Carousel {
     ].join("");
   }
 }
-
-// async function to get JSON data, run this before
-// initiating a new carousel.
-function getJson() {
-  return fetch("https://assets.codepen.io/307033/slides.json")
-    .then(function (response) {
-      // The API call was successful!
-      return response.json();
-    })
-    .then(function (data) {
-      // This is the JSON from our response
-      console.log(data);
-      return data.slides;
-    })
-    .catch(function (err) {
-      // There was an error
-      console.warn("Something went wrong.", err);
-    });
-}
-getJson().then((data) => {
-  console.log("data", data);
-  const carousel2 = new SuperJSONCarousel("#carousel--2", data);
-});
 
 // Static methods, logger utility, utility functions, mixins
