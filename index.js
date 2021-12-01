@@ -140,6 +140,14 @@ class SuperJSONCarousel extends Carousel {
     if (this.captions) {
       this.renderCaptions = this.renderCaptions.bind(this);
     }
+    // Add pager support
+    this.pager = this.carousel.hasAttribute("data-pager")
+      ? this.carousel.getAttribute("data-pager") === "true"
+      : false;
+    console.log("this.pager", this.pager);
+    if (this.pager) {
+      this.renderPager = this.renderPager.bind(this);
+    }
 
     // Bind methods with "this"
     this.renderApp = this.renderApp.bind(this);
@@ -211,6 +219,56 @@ class SuperJSONCarousel extends Carousel {
       this.renderCaptions(slide),
       "</div>",
       "</div>"
+    ].join("");
+  }
+  /**
+   * Render pager
+   * @return {[type]} [description]
+   */
+  renderPager() {
+    if (!this.pager) {
+      console.log("Error. Pager is not set to true.");
+      return;
+    }
+
+    // Old school way
+    // return [
+    //   "<button class='button button--indicator' data-slide-to='1'>Slide to #1</button>",
+    //   "<button class='button button--indicator' data-slide-to='2'>Slide to #2</button>",
+    //   "<button class='button button--indicator' data-slide-to='3'>Slide to #3</button>",
+    //   "<button class='button button--indicator' data-slide-to='4'>Slide to #4 (nope)</button>",
+    //   "<button class='button button--indicator' data-slide-to='5'>Slide to #5 (nope)</button>"
+    // ].join("");
+
+    // Check that we have slides
+    if (this.slidesLength > 0) {
+      // Get an array of DOM strings
+      const arr = [];
+
+      // For each slide
+      this.slides.forEach((slide, i) => {
+        // Push render dot into the array
+        arr.push(this.renderDot(i + 1));
+      });
+
+      return arr.join("");
+    } else {
+      console.log("Error. No slides.");
+      return;
+    }
+  }
+
+  renderDot(i) {
+    // Old school way
+    // const button = document.createElement("button");
+    // button.classList.add("button", "button--inidicator");
+    // button.setAttribute("data-slide-to", i);
+    // button.textContent = `Slide to #${i}`;
+    // New way
+    return [
+      "<button class='button button--indicator' data-slide-to='" + i + "'>",
+      "Slide to #" + i + ".",
+      "</button>"
     ].join("");
   }
 
@@ -321,9 +379,8 @@ class SuperJSONCarousel extends Carousel {
    */
   renderButtons() {
     return [
+      this.renderPager(),
       this.renderButton("&#10094;", "button button--prev", "Prev", "prev"),
-      // this.renderButton("Play", "button button--play"),
-      // this.renderButton("Pause", "button button--pause"),
       this.renderAutoControls(),
       this.renderButton("&#10095;", "button button--next", "Next", "next")
     ].join("");
