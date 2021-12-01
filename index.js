@@ -132,14 +132,14 @@ class SuperJSONCarousel extends Carousel {
       ? this.carousel.getAttribute("data-fade") === "true"
       : false;
     console.log("this.fade", this.fade);
-    // // Add caption support
-    // this.captions = this.carousel.hasAttribute("data-captions")
-    //   ? this.carousel.getAttribute("data-captions") === "true"
-    //   : false;
-    // console.log("this.captions", this.captions);
-    // if (this.captions) {
-    //   this.renderCaptions = this.renderCaptions.bind(this);
-    // }
+    // Add caption support
+    this.captions = this.carousel.hasAttribute("data-captions")
+      ? this.carousel.getAttribute("data-captions") === "true"
+      : false;
+    console.log("this.captions", this.captions);
+    if (this.captions) {
+      this.renderCaptions = this.renderCaptions.bind(this);
+    }
 
     // Bind methods with "this"
     this.renderApp = this.renderApp.bind(this);
