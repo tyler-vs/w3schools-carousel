@@ -305,10 +305,6 @@ class SuperJSONCarousel extends Carousel {
    */
   renderButtons() {
     return [
-      // "<button class='button button--prev' data-slide='prev' title='Prev'>&#10094;</button>",
-      // "<button class='button button--play'>Play</button>",
-      // "<button class='button button--pause'>Pause</button>",
-      // "<button class='button button--next' data-slide='next' title='Next'>&#10095;</button>"
       this.renderButton("&#10094;", "button button--prev", "Prev", "prev"),
       this.renderButton("Play", "button button--play"),
       this.renderButton("Pause", "button button--pause"),
