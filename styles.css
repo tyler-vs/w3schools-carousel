@@ -48,6 +48,7 @@
   background-color: rgba(0, 0, 0, 0.8);
 }
 .button[data-slide="prev"] {
+  left: 0;
 }
 .button[data-slide="next"] {
   right: 0;
