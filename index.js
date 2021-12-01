@@ -119,6 +119,31 @@ class SuperJSONCarousel extends Carousel {
     // Get slides object/array
     this.slides = slidesObject;
 
+    // Add auto controls (play/pause) support
+    this.autoControls = this.carousel.hasAttribute("data-auto-controls")
+      ? this.carousel.getAttribute("data-auto-controls") === "true"
+      : false;
+    console.log("this.autoControls", this.autoControls);
+    if (this.autoControls) {
+      this.renderAutoControls = this.renderAutoControls.bind(this);
+    }
+    // // Add fade support
+    // this.fade = this.carousel.hasAttribute("data-fade")
+    //   ? this.carousel.getAttribute("data-fade") === "true"
+    //   : false;
+    // console.log("this.fade", this.fade);
+    // // if (this.fade) {
+    // //   this.fade = this.fade.bind(this);
+    // // }
+    // // Add caption support
+    // this.captions = this.carousel.hasAttribute("data-captions")
+    //   ? this.carousel.getAttribute("data-captions") === "true"
+    //   : false;
+    // console.log("this.captions", this.captions);
+    // if (this.captions) {
+    //   this.renderCaptions = this.renderCaptions.bind(this);
+    // }
+
     // Bind methods with "this"
     this.renderApp = this.renderApp.bind(this);
     this.renderSlide = this.renderSlide.bind(this);
