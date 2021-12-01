@@ -132,9 +132,6 @@ class SuperJSONCarousel extends Carousel {
       ? this.carousel.getAttribute("data-fade") === "true"
       : false;
     console.log("this.fade", this.fade);
-    // if (this.fade) {
-    //   this.fade = this.fade.bind(this);
-    // }
     // // Add caption support
     // this.captions = this.carousel.hasAttribute("data-captions")
     //   ? this.carousel.getAttribute("data-captions") === "true"
