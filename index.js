@@ -286,6 +286,20 @@ class SuperJSONCarousel extends Carousel {
   }
 
   /**
+   * Render auto controls (play/pause) buttons
+   * @return {[type]}         [description]
+   */
+  renderAutoControls() {
+    if (!this.autoControls) {
+      return "";
+    }
+    return [
+      this.renderButton("Play", "button button--play", null, null),
+      this.renderButton("Pause", "button button--pause", null, null)
+    ].join("");
+  }
+
+  /**
    * Helper method to render slideshow buttons.
    * @return {[type]} [description]
    */
