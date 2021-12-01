@@ -1,5 +1,3 @@
-console.clear();
-
 class Carousel {
   constructor(selector) {
     // @TODO Feature detection
@@ -15,8 +13,16 @@ class Carousel {
     this.init();
   }
 
+  /**
+   * Initializes the carousel by:
+   * - setting up variables
+   * - Getting data- attribute values
+   * - Binding "this" to methods
+   * - Invoke addEventListeners() method
+   * - Show initial slide
+   * @return {[type]} [description]
+   */
   init() {
-    console.count("Original init");
     // Set up variables
     this.slideIndex = null;
     this.sliderInterval = null;
@@ -44,8 +50,7 @@ class Carousel {
     // Even private methods
     this.showDivs = this.showDivs.bind(this);
 
-    // Add event listeners without bind() in the call.
-    // this.addEventListeners = this.addEventListeners.bind(this);
+    // Add event listeners
     this.addEventListeners();
 
     // Init
@@ -176,7 +181,14 @@ class SuperJSONCarousel extends Carousel {
     ].join("");
   }
 
-  // Helper method to create HTML button elements from scratch
+  /**
+   * Helper method to create HTML button elements from scratch.
+   * @param  {String} content HTML/string content
+   * @param  {String} css     String for CSS classes
+   * @param  {String} title   String title for title attribute
+   * @param  {String} data    String value for data- attribute
+   * @return {[type]}         [description]
+   */
   renderButton(content, css, title, data) {
     if (!content) {
       console.log("Must provide content to the renderButton function.");
@@ -185,9 +197,6 @@ class SuperJSONCarousel extends Carousel {
 
     return [
       "<button ",
-      // @todo add checks
-      // "<button " +
-      // (css !== undefined ? this.renderClassAttribute(css) : "") +
       this.renderClassAttribute(css),
       this.renderDataAttribute("slide", data),
       this.renderTitleAttribute(title),
@@ -198,15 +207,24 @@ class SuperJSONCarousel extends Carousel {
   }
 
   // @todo handle [...class] array of classes
+  /**
+   * Helper method to render class attribute.
+   * @param  {String} name Class attribute value
+   * @return {[type]}      [description]
+   */
   renderClassAttribute(name) {
     if (!name) {
       console.log("Error. Must provide a class name.");
       return;
     }
-    // return 'class="' + name + '" ';
     return `class="${name}" `;
   }
 
+  /**
+   * Helper method for rendering title attribute.
+   * @param  {String} title Title attirbute value.
+   * @return {[type]}       [description]
+   */
   renderTitleAttribute(title) {
     if (!title) {
       console.log("Error. Must provide a title for the title attribute.");
@@ -216,6 +234,12 @@ class SuperJSONCarousel extends Carousel {
     return `title="${title}" `;
   }
 
+  /**
+   * Helper method for rendering a data- attribute.
+   * @param  {String} name  Value that comes after data-
+   * @param  {String} value String value
+   * @return {[type]}       [description]
+   */
   renderDataAttribute(name = "slide", value) {
     if (!value) {
       console.log(
@@ -225,7 +249,10 @@ class SuperJSONCarousel extends Carousel {
     return `data-${name}="${value}"`;
   }
 
-  // Renders slideshow buttons
+  /**
+   * Helper method to render slideshow buttons.
+   * @return {[type]} [description]
+   */
   renderButtons() {
     return [
       // "<button class='button button--prev' data-slide='prev' title='Prev'>&#10094;</button>",
