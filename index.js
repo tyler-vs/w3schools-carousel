@@ -127,14 +127,14 @@ class SuperJSONCarousel extends Carousel {
     if (this.autoControls) {
       this.renderAutoControls = this.renderAutoControls.bind(this);
     }
-    // // Add fade support
-    // this.fade = this.carousel.hasAttribute("data-fade")
-    //   ? this.carousel.getAttribute("data-fade") === "true"
-    //   : false;
-    // console.log("this.fade", this.fade);
-    // // if (this.fade) {
-    // //   this.fade = this.fade.bind(this);
-    // // }
+    // Add fade support
+    this.fade = this.carousel.hasAttribute("data-fade")
+      ? this.carousel.getAttribute("data-fade") === "true"
+      : false;
+    console.log("this.fade", this.fade);
+    // if (this.fade) {
+    //   this.fade = this.fade.bind(this);
+    // }
     // // Add caption support
     // this.captions = this.carousel.hasAttribute("data-captions")
     //   ? this.carousel.getAttribute("data-captions") === "true"
@@ -202,16 +202,35 @@ class SuperJSONCarousel extends Carousel {
       return;
     }
     return [
-      "<div class='carousel-item carousel-item--" + index + "'>",
+      "<div class='carousel-item carousel-item--" +
+        index +
+        " " +
+        (this.fade === true ? "fade" : "") +
+        " '>",
       "<div class='carousel-item__inner'>",
       "<div class='carousel-item__box-ratio'>",
       "<img src='" + slide.image + "' class='carousel-item__img'>",
       "</div>",
+      this.renderCaptions(slide),
+      "</div>",
+      "</div>"
+    ].join("");
+  }
+
+  /**
+   * Render slide captions
+   * @param  {Object} slide Slide object
+   * @return {[type]}       [description]
+   */
+  renderCaptions(slide) {
+    if (!slide) {
+      console.log("No slide data for captions passed.");
+      return false;
+    }
+    return [
       "<div class='carousel-item__caption'>",
       "<h3>" + slide.heading + "</h3>",
       "<p>" + slide.subheading + "</p>",
-      "</div>",
-      "</div>",
       "</div>"
     ].join("");
   }
