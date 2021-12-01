@@ -159,6 +159,23 @@ class SuperJSONCarousel extends Carousel {
 
     // Call super/parent init method
     super.init();
+
+    // Must be called after super.init();
+    // Get "slide to" buttons
+    this.slideToButtons = this.carousel.querySelectorAll("[data-slide-to]");
+    // Bail if no "slide to" buttons found
+    if (!this.slideToButtons.length > 0) {
+      console.log('Error, no "slide-to" buttons found.');
+      return false;
+    }
+    // Loop through each button
+    this.slideToButtons.forEach((button) => {
+      // Add click event handler
+      button.addEventListener("click", (event) => {
+        // Select slide
+        this.selectSlide(Number(event.target.dataset.slideTo));
+      });
+    });
   }
 
   // Add an init() method that basically overrides the parent classes
@@ -232,18 +249,19 @@ class SuperJSONCarousel extends Carousel {
     }
 
     // Old school way
-    // return [
-    //   "<button class='button button--indicator' data-slide-to='1'>Slide to #1</button>",
-    //   "<button class='button button--indicator' data-slide-to='2'>Slide to #2</button>",
-    //   "<button class='button button--indicator' data-slide-to='3'>Slide to #3</button>",
-    //   "<button class='button button--indicator' data-slide-to='4'>Slide to #4 (nope)</button>",
-    //   "<button class='button button--indicator' data-slide-to='5'>Slide to #5 (nope)</button>"
-    // ].join("");
+    return [
+      "<button class='button button--indicator' data-slide-to='1'>Slide to #1</button>",
+      "<button class='button button--indicator' data-slide-to='2'>Slide to #2</button>",
+      "<button class='button button--indicator' data-slide-to='3'>Slide to #3</button>",
+      "<button class='button button--indicator' data-slide-to='4'>Slide to #4 (nope)</button>",
+      "<button class='button button--indicator' data-slide-to='5'>Slide to #5 (nope)</button>"
+    ].join("");
+
+    // Get an array of DOM strings
+    const arr = [];
 
     // Check that we have slides
     if (this.slidesLength > 0) {
-      // Get an array of DOM strings
-      const arr = [];
 
       // For each slide
       this.slides.forEach((slide, i) => {
@@ -251,11 +269,12 @@ class SuperJSONCarousel extends Carousel {
         arr.push(this.renderDot(i + 1));
       });
 
-      return arr.join("");
     } else {
       console.log("Error. No slides.");
       return;
     }
+
+    return arr.join("");
   }
 
   renderDot(i) {
@@ -384,6 +403,15 @@ class SuperJSONCarousel extends Carousel {
       this.renderAutoControls(),
       this.renderButton("&#10095;", "button button--next", "Next", "next")
     ].join("");
+  }
+
+  /**
+   * Select slide by number
+   * @param  {[type]} n [description]
+   * @return {[type]}   [description]
+   */
+  selectSlide(n) {
+    this.showDivs((this.slideIndex = n));
   }
 }
 
