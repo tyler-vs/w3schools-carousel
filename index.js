@@ -2,6 +2,10 @@ class Carousel {
   constructor(selector) {
     // @TODO Feature detection
 
+    if (!selector) {
+      throw new InvalidSelectorError("A selector is required!");
+    }
+
     // Get DOM elements
     this.carousel = document.querySelector(selector);
     if (!this.carousel) {
