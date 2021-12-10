@@ -53,13 +53,13 @@ class Carousel {
     this.pause = this.pause.bind(this);
 
     // Even private methods
-    this.showDivs = this.showDivs.bind(this);
+    this.showSlide = this.showSlide.bind(this);
 
     // Add event listeners
     this.addEventListeners();
 
     // Init
-    this.showDivs(this.slideIndex);
+    this.showSlide(this.slideIndex);
   }
 
   // Binding in the constructor instead of here.
@@ -70,7 +70,7 @@ class Carousel {
     this.pauseButton.addEventListener("click", this.pause);
   }
 
-  showDivs(n) {
+  showSlide(n) {
     var i;
 
     // Go back to first slide
@@ -100,10 +100,10 @@ class Carousel {
     clearInterval(this.sliderInterval);
   }
   prevSlide() {
-    this.showDivs((this.slideIndex += -1));
+    this.showSlide((this.slideIndex += -1));
   }
   nextSlide() {
-    this.showDivs((this.slideIndex += 1));
+    this.showSlide((this.slideIndex += 1));
   }
   play() {
     this.sliderInterval = setInterval(() => {
@@ -415,7 +415,7 @@ class SuperJSONCarousel extends Carousel {
    * @return {[type]}   [description]
    */
   selectSlide(n) {
-    this.showDivs((this.slideIndex = n));
+    this.showSlide((this.slideIndex = n));
   }
 }
 
