@@ -26,6 +26,7 @@ class Carousel {
     // Set up variables
     this.slideIndex = null;
     this.sliderInterval = null;
+    this.slides = this.carousel.querySelectorAll(".carousel-item");
     this.playButton = this.carousel.querySelector(".button--play");
     this.nextButton = this.carousel.querySelector(".button--next");
     this.prevButton = this.carousel.querySelector(".button--prev");
@@ -67,7 +68,7 @@ class Carousel {
 
   showDivs(n) {
     var i;
-    var x = this.carousel.querySelectorAll(".carousel-item");
+    var x = this.slides;
 
     // Go back to first slide
     if (n > x.length) {
