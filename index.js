@@ -72,7 +72,6 @@ class Carousel {
 
   showDivs(n) {
     var i;
-    var x = this.slides;
 
     // Go back to first slide
     if (n > this.slides.length) {
