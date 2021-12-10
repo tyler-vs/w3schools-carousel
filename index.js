@@ -75,27 +75,27 @@ class Carousel {
     var x = this.slides;
 
     // Go back to first slide
-    if (n > x.length) {
+    if (n > this.slides.length) {
       if (this.wrap == true) {
         this.slideIndex = 1;
       } else {
-        this.slideIndex = x.length;
+        this.slideIndex = this.slides.length;
         return;
       }
     }
     // Go to last slide
     if (n < 1) {
       if (this.wrap == true) {
-        this.slideIndex = x.length;
+        this.slideIndex = this.slides.length;
       } else {
         this.slideIndex = 1;
         return;
       }
     }
-    for (i = 0; i < x.length; i++) {
-      x[i].style.display = "none";
+    for (i = 0; i < this.slides.length; i++) {
+      this.slides[i].style.display = "none";
     }
-    x[this.slideIndex - 1].style.display = "block";
+    this.slides[this.slideIndex - 1].style.display = "block";
   }
   pause() {
     clearInterval(this.sliderInterval);
