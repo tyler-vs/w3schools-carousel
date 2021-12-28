@@ -6,9 +6,9 @@ See how to build a [JavaScript carousel here](https://www.w3schools.com/howto/ho
 
 1. run `npm install`
 2. run `npm run watch`
+3. open [`http://localhost:3000/`](http://localhost:3000/)
 
 ## Usage
-
 
 ```js
 // Pass in the query selector string. E.g. "#carousel--1" and then an object full of options.
@@ -31,6 +31,10 @@ const carousel3 = new Carousel(c3, {
 
 ## Contributing
 ~~Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.~~
+
+- <https://www.w3schools.com/howto/howto_js_slideshow.asp>
+- <https://www.makeareadme.com/>
+- 
 
 Just for fun!
 
