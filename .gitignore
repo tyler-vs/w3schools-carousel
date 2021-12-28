@@ -41,7 +41,6 @@ Thumbs.db
 *.sass-cache*
 node_modules
 _site
-dist
 upload
 /.idea
 deploy.log
