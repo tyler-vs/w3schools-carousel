@@ -1,35 +1,19 @@
 import './components/_matches.polyfill.js';
-import './components/errors.js';
+import {InvalidSelectorError, UnsupportedBrowserError} from './components/errors.js';
+import {setWidth, addFadeToSlides, supports, addClass, emitEvent} from './components/helpers.js';
 
-/**
- * Emit a custom event
- * @param  {String} type   The event type
- * @param  {Object} detail Any details to pass along with the event
- * @param  {Node}   elem   The element to attach the event to
- */
-function emitEvent (type, detail = {}, elem = document) {
-
-  // Make sure there's an event type
-  if (!type) return;
-
-  // Create a new event
-  let event = new CustomEvent(type, {
-    bubbles: true,
-    cancelable: true,
-    detail: detail
-  });
-
-  // Dispatch the event
-  return elem.dispatchEvent(event);
-}
 
 /**
  * Constructor
- * @param {[type]} selector [description]
- * @param {[type]} options  [description]
+ * @param {String|Node} selector Either a query selector string or DOM node.
+ * @param {Object} options  Object with options.
  */
 function Carousel(selector, options) {
-  // @TODO Feature detection
+
+  // Check browser support.
+  if (!supports) {
+    throw new UnsupportedBrowserError(`W3Schools Carousel Plugin: This browser does not support the required JavaScript methods and browser APIs.'!`);
+  }
 
   // Bail if not selector.
   if (!selector) {
@@ -109,7 +93,7 @@ Carousel.prototype.toString = function () {
   return `carousel: ${this.carousel}, settings: ${this.settings}`;
 };
 
-
+// Initialize the carousel.
 Carousel.prototype.init = function () {
 
   // Run "before" callback.
@@ -127,15 +111,11 @@ Carousel.prototype.init = function () {
     console.log('Error. No slide elements found.');
   }
 
-  // Check if useFade is enabled and that we have more than 0 slide elements.
-  if (this.settings.useFade && this.slides.length > 0) {
+  // Check if useFade is enabled.
+  if (this.settings.useFade) {
 
-    // Run function for each slide.
-    this.slides.forEach((slide) => {
-
-      // Add classes to each slide for fade effect
-      this.addClass(slide, ["fade", "fader", "bounce"]);
-    });
+    // Add fade support to slides.
+    addFadeToSlides(this.slides);
   }
 
   // Get button DOM elements.
@@ -155,30 +135,28 @@ Carousel.prototype.init = function () {
     this.settings.selectors.slideToButtons
   );
 
-  // Set up carousel settings
+  // Set up carousel settings.
   this.wrap = this.settings.wrap;
   this.interval = this.settings.interval;
   this.slideIndex = this.settings.initialSlideIndex;
   this.slideWidth = this.settings.slideWidth;
   this.lastSlideIndex = this.initialSlideIndex;
 
-  // Bind "this" with class methods
+  // Bind "this" with class methods.
   this.play = this.play.bind(this);
   this.nextSlide = this.nextSlide.bind(this);
   this.prevSlide = this.prevSlide.bind(this);
   this.pause = this.pause.bind(this);
   this.showSlide = this.showSlide.bind(this);
 
-  // Add event listeners
+  // Add event listeners.
   this.addEventListeners();
 
-  // Show initial slide
+  // Show initial slide.
   this.showSlide(this.slideIndex);
 
-  // Check if slideWidth setting is not null or undefined
-  if (this.slideWidth != null || this.slideWidth != undefined) {
-    this.carousel.style.maxWidth = `${this.slideWidth}px`;
-  }
+  // Set carousel width.
+  setWidth(this.carousel, this.slideWidth);
 
   // Add initialized class
   if (
@@ -206,28 +184,31 @@ Carousel.prototype.addEventListeners = function () {
       // Add "click" event handler.
       button.addEventListener("click", (event) => {
         // Select slide based off data- attribute
-        this.selectSlide(Number(event.target.dataset.slideTo));
+        const n = Number(event.target.dataset.slideTo);
+        this.showSlide((this.slideIndex = n));
       });
     });
   }
 };
 
-Carousel.prototype.addClass = function (element, names) {
-  const cssClasses = [].concat(names);
-  if (cssClasses.length > 0) {
-    cssClasses.forEach((cssClass) => {
-      element.classList.add(cssClass);
-    });
-  }
-};
+
 
 Carousel.prototype.getSlider = function () {
   return this.carousel;
 };
 
+/**
+ * Show a slide
+ * @param  {Number} n Index number of slide to slide to.
+ */
 Carousel.prototype.showSlide = function (n) {
-  var i;
 
+  // Bail if no parameter passed
+  if (!n) {
+    return;
+  }
+
+  var i;
 
   // Go back to first slide.
   if (n > this.slides.length) {
@@ -288,10 +269,6 @@ Carousel.prototype.play = function () {
   this.sliderInterval = setInterval(() => {
     this.nextSlide();
   }, this.interval);
-};
-
-Carousel.prototype.selectSlide = function (n) {
-  this.showSlide((this.slideIndex = n));
 };
 
 export default Carousel;

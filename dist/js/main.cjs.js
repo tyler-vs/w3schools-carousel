@@ -1,4 +1,4 @@
-/*! Carousel v1.0.0 | (c) 2021 tyler-vs | MIT License | https://github.com/tyler-vs/w3schools-carousel/ */
+/*! Carousel v2.0.0 | (c) 2021 tyler-vs | MIT License | https://github.com/tyler-vs/w3schools-carousel/ */
 'use strict';
 
 /**
@@ -7,6 +7,90 @@
  */
 if (!Element.prototype.matches) {
 	Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+}
+
+// Custom error
+class InvalidSelectorError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "InvalidSelectorError";
+  }
+}
+
+
+// Custom error
+class UnsupportedBrowserError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "UnsupportedBrowserError";
+  }
+}
+
+/**
+ * helpers.js
+ *
+ * Collection of helper functions for Carousel.
+ */
+
+
+/**
+ * Set the carousel width.
+ * @param {Node} element Carousel element
+ * @param {Number} width   Carousel width in pixels
+ */
+function setWidth(element, width) {
+  if (!element || !width) {
+    return;
+  }
+  // Check if slideWidth setting is not null or undefined.
+  if (width != null || width != undefined) {
+    element.style.maxWidth = `${width}px`;
+  }
+}
+
+/**
+ * Add classes to each slide element in carousel.
+ * @param {NodeList} slides Slide DOM elements returned from querySelectorAll.
+ */
+function addFadeToSlides(slides) {
+
+  // Check that slides were passed
+  if (!slides) return;
+
+  // Run function for each slide.
+  slides.forEach((slide) => {
+
+    // Add classes to each slide for fade effect
+    addClass(slide, ["fade", "fader", "bounce"]);
+  });
+}
+
+
+/**
+ * Check support for browser APIs.
+ * @return {Boolean} True or false based on support queries.
+ */
+function supports() {
+  return (
+    'querySelector' in document &&
+    'addEventListener' in window &&
+    'customEvent' in window &&
+    'forEach' in Array.prototype
+  );
+}
+
+/**
+ * Add class(es) to DOM elements
+ * @param {[type]} element [description]
+ * @param {[type]} names   [description]
+ */
+function addClass(element, names) {
+  const cssClasses = [].concat(names);
+  if (cssClasses.length > 0) {
+    cssClasses.forEach((cssClass) => {
+      element.classList.add(cssClass);
+    });
+  }
 }
 
 /**
@@ -33,11 +117,15 @@ function emitEvent (type, detail = {}, elem = document) {
 
 /**
  * Constructor
- * @param {[type]} selector [description]
- * @param {[type]} options  [description]
+ * @param {String|Node} selector Either a query selector string or DOM node.
+ * @param {Object} options  Object with options.
  */
 function Carousel(selector, options) {
-  // @TODO Feature detection
+
+  // Check browser support.
+  if (!supports) {
+    throw new UnsupportedBrowserError(`W3Schools Carousel Plugin: This browser does not support the required JavaScript methods and browser APIs.'!`);
+  }
 
   // Bail if not selector.
   if (!selector) {
@@ -117,7 +205,7 @@ Carousel.prototype.toString = function () {
   return `carousel: ${this.carousel}, settings: ${this.settings}`;
 };
 
-
+// Initialize the carousel.
 Carousel.prototype.init = function () {
 
   // Run "before" callback.
@@ -135,15 +223,11 @@ Carousel.prototype.init = function () {
     console.log('Error. No slide elements found.');
   }
 
-  // Check if useFade is enabled and that we have more than 0 slide elements.
-  if (this.settings.useFade && this.slides.length > 0) {
+  // Check if useFade is enabled.
+  if (this.settings.useFade) {
 
-    // Run function for each slide.
-    this.slides.forEach((slide) => {
-
-      // Add classes to each slide for fade effect
-      this.addClass(slide, ["fade", "fader", "bounce"]);
-    });
+    // Add fade support to slides.
+    addFadeToSlides(this.slides);
   }
 
   // Get button DOM elements.
@@ -163,30 +247,28 @@ Carousel.prototype.init = function () {
     this.settings.selectors.slideToButtons
   );
 
-  // Set up carousel settings
+  // Set up carousel settings.
   this.wrap = this.settings.wrap;
   this.interval = this.settings.interval;
   this.slideIndex = this.settings.initialSlideIndex;
   this.slideWidth = this.settings.slideWidth;
   this.lastSlideIndex = this.initialSlideIndex;
 
-  // Bind "this" with class methods
+  // Bind "this" with class methods.
   this.play = this.play.bind(this);
   this.nextSlide = this.nextSlide.bind(this);
   this.prevSlide = this.prevSlide.bind(this);
   this.pause = this.pause.bind(this);
   this.showSlide = this.showSlide.bind(this);
 
-  // Add event listeners
+  // Add event listeners.
   this.addEventListeners();
 
-  // Show initial slide
+  // Show initial slide.
   this.showSlide(this.slideIndex);
 
-  // Check if slideWidth setting is not null or undefined
-  if (this.slideWidth != null || this.slideWidth != undefined) {
-    this.carousel.style.maxWidth = `${this.slideWidth}px`;
-  }
+  // Set carousel width.
+  setWidth(this.carousel, this.slideWidth);
 
   // Add initialized class
   if (
@@ -214,28 +296,31 @@ Carousel.prototype.addEventListeners = function () {
       // Add "click" event handler.
       button.addEventListener("click", (event) => {
         // Select slide based off data- attribute
-        this.selectSlide(Number(event.target.dataset.slideTo));
+        const n = Number(event.target.dataset.slideTo);
+        this.showSlide((this.slideIndex = n));
       });
     });
   }
 };
 
-Carousel.prototype.addClass = function (element, names) {
-  const cssClasses = [].concat(names);
-  if (cssClasses.length > 0) {
-    cssClasses.forEach((cssClass) => {
-      element.classList.add(cssClass);
-    });
-  }
-};
+
 
 Carousel.prototype.getSlider = function () {
   return this.carousel;
 };
 
+/**
+ * Show a slide
+ * @param  {Number} n Index number of slide to slide to.
+ */
 Carousel.prototype.showSlide = function (n) {
-  var i;
 
+  // Bail if no parameter passed
+  if (!n) {
+    return;
+  }
+
+  var i;
 
   // Go back to first slide.
   if (n > this.slides.length) {
@@ -296,10 +381,6 @@ Carousel.prototype.play = function () {
   this.sliderInterval = setInterval(() => {
     this.nextSlide();
   }, this.interval);
-};
-
-Carousel.prototype.selectSlide = function (n) {
-  this.showSlide((this.slideIndex = n));
 };
 
 module.exports = Carousel;
