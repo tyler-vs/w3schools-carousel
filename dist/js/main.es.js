@@ -7,7 +7,28 @@ if (!Element.prototype.matches) {
 	Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
 }
 
-// console.log('another-file.js file loaded');
+/**
+ * Emit a custom event
+ * @param  {String} type   The event type
+ * @param  {Object} detail Any details to pass along with the event
+ * @param  {Node}   elem   The element to attach the event to
+ */
+function emitEvent (type, detail = {}, elem = document) {
+
+  // Make sure there's an event type
+  if (!type) return;
+
+  // Create a new event
+  let event = new CustomEvent(type, {
+    bubbles: true,
+    cancelable: true,
+    detail: detail
+  });
+
+  // Dispatch the event
+  return elem.dispatchEvent(event);
+}
+
 /**
  * Constructor
  * @param {[type]} selector [description]
@@ -94,6 +115,7 @@ Carousel.prototype.toString = function () {
   return `carousel: ${this.carousel}, settings: ${this.settings}`;
 };
 
+
 Carousel.prototype.init = function () {
 
   // Run "before" callback.
@@ -144,6 +166,7 @@ Carousel.prototype.init = function () {
   this.interval = this.settings.interval;
   this.slideIndex = this.settings.initialSlideIndex;
   this.slideWidth = this.settings.slideWidth;
+  this.lastSlideIndex = this.initialSlideIndex;
 
   // Bind "this" with class methods
   this.play = this.play.bind(this);
@@ -211,7 +234,8 @@ Carousel.prototype.getSlider = function () {
 Carousel.prototype.showSlide = function (n) {
   var i;
 
-  // Go back to first slide
+
+  // Go back to first slide.
   if (n > this.slides.length) {
     if (this.wrap == true) {
       this.slideIndex = 1;
@@ -220,7 +244,7 @@ Carousel.prototype.showSlide = function (n) {
       return;
     }
   }
-  // Go to last slide
+  // Go to last slide.
   if (n < 1) {
     if (this.wrap == true) {
       this.slideIndex = this.slides.length;
@@ -229,10 +253,27 @@ Carousel.prototype.showSlide = function (n) {
       return;
     }
   }
+
+  // Hide all slides.
   for (i = 0; i < this.slides.length; i++) {
     this.slides[i].style.display = "none";
   }
+
+  // Show slide.
   this.slides[this.slideIndex - 1].style.display = "block";
+
+  // Get the direction based on the slide index numbers.
+  const direction = (this.lastSlideIndex > this.slideIndex) ? 'backwards' : 'forward';
+
+  // Emit custom event.
+  emitEvent('carousel::slide', {
+    direction: direction,
+    from: this.lastSlideIndex,
+    to: this.slideIndex
+  }, this.carousel);
+
+  // Update lastSlideIndex to current slide.
+  this.lastSlideIndex = this.slideIndex;
 };
 
 Carousel.prototype.pause = function () {
